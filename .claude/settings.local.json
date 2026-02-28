@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /a \"C:\\\\Users\\\\sh980\\\\App1\")",
+      "Bash(dir /a \"C:\\\\Users\\\\sh980\\\\App1\\\\markdown\")",
+      "Bash(dir /a \"C:\\\\Users\\\\sh980\\\\App1\\\\.claude\")",
+      "Bash(npx create-expo-app@latest semos-library --template blank-typescript)",
+      "Bash(npx expo:*)",
+      "Bash(npm install)"
+    ]
+  }
+}
