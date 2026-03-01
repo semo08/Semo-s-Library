@@ -2,41 +2,105 @@ import * as SQLite from 'expo-sqlite';
 import { Book, MyBook, CollectionType } from '../types';
 
 const DATABASE_NAME = 'semos_library.db';
+const DB_VERSION = 1;
 
 let db: SQLite.SQLiteDatabase | null = null;
+
+// 마이그레이션 실행
+const runMigrations = async (currentVersion: number): Promise<void> => {
+  if (!db) throw new Error('Database not initialized');
+
+  console.log(`[DB] Running migrations from version ${currentVersion} to ${DB_VERSION}`);
+
+  // Version 1: 초기 스키마
+  if (currentVersion < 1) {
+    console.log('[DB] Applying migration v1: Initial schema');
+
+    // 책 테이블
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS books (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        author TEXT,
+        publisher TEXT,
+        publishDate TEXT,
+        coverUrl TEXT,
+        description TEXT,
+        isbn TEXT
+      );
+    `);
+
+    // 내 컬렉션 테이블
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS my_books (
+        id TEXT PRIMARY KEY,
+        bookId TEXT NOT NULL,
+        collectionType TEXT NOT NULL,
+        rating REAL,
+        review TEXT,
+        readDate TEXT,
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL,
+        FOREIGN KEY (bookId) REFERENCES books (id)
+      );
+    `);
+
+    // 인덱스 추가 (검색 성능 향상)
+    await db.execAsync(`
+      CREATE INDEX IF NOT EXISTS idx_my_books_collection
+      ON my_books(collectionType);
+    `);
+
+    await db.execAsync(`
+      CREATE INDEX IF NOT EXISTS idx_my_books_created
+      ON my_books(createdAt);
+    `);
+  }
+
+  // 향후 마이그레이션은 여기에 추가
+  // if (currentVersion < 2) { ... }
+
+  // 버전 업데이트
+  await db.execAsync(`
+    UPDATE migrations SET version = ${DB_VERSION}, updatedAt = datetime('now')
+  `);
+
+  console.log(`[DB] Migration completed: version ${DB_VERSION}`);
+};
 
 // 데이터베이스 초기화
 export const initDatabase = async (): Promise<void> => {
   db = await SQLite.openDatabaseAsync(DATABASE_NAME);
 
-  // 책 테이블
+  // 마이그레이션 테이블 생성
   await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS books (
-      id TEXT PRIMARY KEY,
-      title TEXT NOT NULL,
-      author TEXT,
-      publisher TEXT,
-      publishDate TEXT,
-      coverUrl TEXT,
-      description TEXT,
-      isbn TEXT
+    CREATE TABLE IF NOT EXISTS migrations (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      version INTEGER NOT NULL DEFAULT 0,
+      updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
     );
   `);
 
-  // 내 컬렉션 테이블
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS my_books (
-      id TEXT PRIMARY KEY,
-      bookId TEXT NOT NULL,
-      collectionType TEXT NOT NULL,
-      rating REAL,
-      review TEXT,
-      readDate TEXT,
-      createdAt TEXT NOT NULL,
-      updatedAt TEXT NOT NULL,
-      FOREIGN KEY (bookId) REFERENCES books (id)
-    );
-  `);
+  // 현재 DB 버전 확인
+  const versionResult = await db.getFirstAsync<{ version: number }>(
+    'SELECT version FROM migrations WHERE id = 1'
+  );
+
+  const currentVersion = versionResult?.version ?? 0;
+
+  // 초기 레코드 삽입 (처음 실행 시)
+  if (!versionResult) {
+    await db.execAsync(`
+      INSERT INTO migrations (id, version) VALUES (1, 0);
+    `);
+  }
+
+  // 마이그레이션 필요 여부 확인
+  if (currentVersion < DB_VERSION) {
+    await runMigrations(currentVersion);
+  } else {
+    console.log(`[DB] Database is up to date (v${currentVersion})`);
+  }
 };
 
 // 책 저장
@@ -201,5 +265,64 @@ export const getReadBooksStats = async (): Promise<{
   return {
     totalCount: totalResult?.count ?? 0,
     thisYearCount: thisYearResult?.count ?? 0,
+  };
+};
+
+// 평균 별점 계산
+export const getAverageRating = async (): Promise<number> => {
+  if (!db) throw new Error('Database not initialized');
+
+  const result = await db.getFirstAsync<{ avgRating: number | null }>(
+    `SELECT AVG(rating) as avgRating
+     FROM my_books
+     WHERE collectionType = 'read' AND rating IS NOT NULL`
+  );
+
+  return result?.avgRating ?? 0;
+};
+
+// 이번 달 읽은 책 수
+export const getMonthlyReadCount = async (): Promise<number> => {
+  if (!db) throw new Error('Database not initialized');
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+
+  const result = await db.getFirstAsync<{ count: number }>(
+    `SELECT COUNT(*) as count
+     FROM my_books
+     WHERE collectionType = 'read'
+     AND strftime('%Y-%m', readDate) = ?`,
+    [`${year}-${month}`]
+  );
+
+  return result?.count ?? 0;
+};
+
+// 전체 통계 (홈 화면용)
+export const getHomeStats = async (): Promise<{
+  totalReadCount: number;
+  thisYearCount: number;
+  thisMonthCount: number;
+  averageRating: number;
+  wishlistCount: number;
+}> => {
+  if (!db) throw new Error('Database not initialized');
+
+  const readStats = await getReadBooksStats();
+  const avgRating = await getAverageRating();
+  const monthlyCount = await getMonthlyReadCount();
+
+  const wishlistResult = await db.getFirstAsync<{ count: number }>(
+    `SELECT COUNT(*) as count FROM my_books WHERE collectionType = 'wishlist'`
+  );
+
+  return {
+    totalReadCount: readStats.totalCount,
+    thisYearCount: readStats.thisYearCount,
+    thisMonthCount: monthlyCount,
+    averageRating: Math.round(avgRating * 10) / 10, // 소수점 1자리
+    wishlistCount: wishlistResult?.count ?? 0,
   };
 };

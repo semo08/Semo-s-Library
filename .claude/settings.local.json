@@ -6,7 +6,9 @@
       "Bash(dir /a \"C:\\\\Users\\\\sh980\\\\App1\\\\.claude\")",
       "Bash(npx create-expo-app@latest semos-library --template blank-typescript)",
       "Bash(npx expo:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(npx tsc:*)",
+      "Bash(dir /s /b srccomponents*.tsx srcservicesnaverApi.ts srcstoresbookStore.ts srcscreensSearchScreen.tsx)"
     ]
   }
 }

@@ -35,7 +35,7 @@ export const searchBooks = async (
 
   try {
     const params = new URLSearchParams({
-      query: query,
+      query: query.trim(),
       start: String(start),
       display: String(display),
     });
@@ -49,7 +49,16 @@ export const searchBooks = async (
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('[Naver API] Error response:', response.status, errorText);
+
+      if (response.status === 429) {
+        throw new Error('검색 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.');
+      } else if (response.status === 401) {
+        throw new Error('API 인증에 실패했습니다.');
+      } else {
+        throw new Error(`검색 실패 (${response.status})`);
+      }
     }
 
     const data: NaverBookSearchResponse = await response.json();
@@ -59,17 +68,25 @@ export const searchBooks = async (
       total: data.total,
     };
   } catch (error) {
-    console.error('책 검색 오류:', error);
-    throw error;
+    if (error instanceof Error) {
+      console.error('[Naver API] 책 검색 오류:', error.message);
+      throw error;
+    }
+    console.error('[Naver API] 책 검색 알 수 없는 오류:', error);
+    throw new Error('책 검색 중 오류가 발생했습니다.');
   }
 };
 
 // ISBN으로 책 상세 정보 가져오기
 export const getBookByIsbn = async (isbn: string): Promise<Book | null> => {
+  if (!isbn.trim()) {
+    return null;
+  }
+
   try {
     const params = new URLSearchParams({
-      query: isbn,
-      d_isbn: isbn,
+      query: isbn.trim(),
+      d_isbn: isbn.trim(),
     });
 
     const response = await fetch(`${NAVER_BOOK_API_URL}?${params}`, {
@@ -81,7 +98,13 @@ export const getBookByIsbn = async (isbn: string): Promise<Book | null> => {
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('[Naver API] Error response:', response.status, errorText);
+
+      if (response.status === 401) {
+        throw new Error('API 인증에 실패했습니다.');
+      }
+      throw new Error(`책 조회 실패 (${response.status})`);
     }
 
     const data: NaverBookSearchResponse = await response.json();
@@ -92,7 +115,11 @@ export const getBookByIsbn = async (isbn: string): Promise<Book | null> => {
 
     return convertToBook(data.items[0]);
   } catch (error) {
-    console.error('책 상세 조회 오류:', error);
-    throw error;
+    if (error instanceof Error) {
+      console.error('[Naver API] 책 상세 조회 오류:', error.message);
+      throw error;
+    }
+    console.error('[Naver API] 책 상세 조회 알 수 없는 오류:', error);
+    throw new Error('책 조회 중 오류가 발생했습니다.');
   }
 };
