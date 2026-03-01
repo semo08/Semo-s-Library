@@ -37,7 +37,7 @@ export default function App() {
   if (!isReady) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color={colors.primary.walnut} />
+        <ActivityIndicator size="large" color={colors.primary.terracotta} />
         <Text style={styles.loadingText}>로딩 중...</Text>
       </View>
     );
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 16,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     fontSize: 16,
   },
   errorText: {

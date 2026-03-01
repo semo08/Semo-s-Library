@@ -78,11 +78,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.parchment,
   },
   activeTab: {
-    backgroundColor: colors.primary.walnut,
+    backgroundColor: colors.primary.terracotta,
   },
   tabText: {
     ...typography.button,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
   },
   activeTabText: {
     color: colors.white,
@@ -106,12 +106,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     ...typography.subtitle,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     marginBottom: 12,
   },
   emptyDescription: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     textAlign: 'center',
     lineHeight: 22,
   },

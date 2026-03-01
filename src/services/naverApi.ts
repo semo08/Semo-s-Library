@@ -20,6 +20,7 @@ const convertToBook = (item: NaverBookItem): Book => {
     coverUrl: item.image,
     description: cleanText(item.description),
     isbn: item.isbn,
+    price: item.price ? parseInt(item.price, 10) : null,
   };
 };
 

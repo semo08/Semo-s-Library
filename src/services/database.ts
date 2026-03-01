@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { Book, MyBook, CollectionType } from '../types';
 
 const DATABASE_NAME = 'semos_library.db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let db: SQLite.SQLiteDatabase | null = null;
 
@@ -57,8 +57,13 @@ const runMigrations = async (currentVersion: number): Promise<void> => {
     `);
   }
 
-  // 향후 마이그레이션은 여기에 추가
-  // if (currentVersion < 2) { ... }
+  // Version 2: 책 정가 필드 추가
+  if (currentVersion < 2) {
+    console.log('[DB] Applying migration v2: Add price column to books');
+    await db.execAsync(`
+      ALTER TABLE books ADD COLUMN price INTEGER;
+    `);
+  }
 
   // 버전 업데이트
   await db.execAsync(`
@@ -108,8 +113,8 @@ export const saveBook = async (book: Book): Promise<void> => {
   if (!db) throw new Error('Database not initialized');
 
   await db.runAsync(
-    `INSERT OR REPLACE INTO books (id, title, author, publisher, publishDate, coverUrl, description, isbn)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT OR REPLACE INTO books (id, title, author, publisher, publishDate, coverUrl, description, isbn, price)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       book.id,
       book.title,
@@ -119,6 +124,7 @@ export const saveBook = async (book: Book): Promise<void> => {
       book.coverUrl,
       book.description,
       book.isbn,
+      book.price,
     ]
   );
 };
@@ -162,7 +168,7 @@ export const getMyBooks = async (
   if (!db) throw new Error('Database not initialized');
 
   let query = `
-    SELECT mb.*, b.title, b.author, b.publisher, b.publishDate, b.coverUrl, b.description, b.isbn
+    SELECT mb.*, b.title, b.author, b.publisher, b.publishDate, b.coverUrl, b.description, b.isbn, b.price
     FROM my_books mb
     JOIN books b ON mb.bookId = b.id
   `;
@@ -189,6 +195,7 @@ export const getMyBooks = async (
       coverUrl: row.coverUrl,
       description: row.description,
       isbn: row.isbn,
+      price: row.price,
     },
     collectionType: row.collectionType as CollectionType,
     rating: row.rating,

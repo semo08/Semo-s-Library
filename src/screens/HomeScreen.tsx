@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     ...typography.title,
-    color: colors.primary.walnut,
+    color: colors.primary.terracotta,
   },
   statLabel: {
     ...typography.caption,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     marginTop: 4,
   },
   searchButton: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.subtitle,
-    color: colors.primary.walnut,
+    color: colors.primary.terracotta,
     marginBottom: 16,
   },
   emptyState: {
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.parchment,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: colors.neutral.sand,
+    borderColor: colors.text.latte,
     borderStyle: 'dashed',
   },
   emptyIcon: {
@@ -109,12 +109,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     ...typography.bodyLarge,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     fontWeight: '600',
   },
   emptyDescription: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     marginTop: 8,
   },
 });

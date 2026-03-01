@@ -128,14 +128,14 @@ const styles = StyleSheet.create({
   title: {
     ...typography.subtitle,
     fontSize: 16,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     marginBottom: 6,
     lineHeight: 22,
   },
   author: {
     ...typography.body,
     fontSize: 14,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     marginBottom: 4,
   },
   publishInfo: {
@@ -144,24 +144,24 @@ const styles = StyleSheet.create({
   },
   publisher: {
     ...typography.caption,
-    color: colors.neutral.sand,
+    color: colors.text.latte,
     flex: 0,
     maxWidth: SCREEN_WIDTH * 0.4,
   },
   separator: {
     ...typography.caption,
-    color: colors.neutral.sand,
+    color: colors.text.latte,
     marginHorizontal: 6,
   },
   publishDate: {
     ...typography.caption,
-    color: colors.neutral.sand,
+    color: colors.text.latte,
   },
   addButton: {
     width: 44, // 터치 타겟 최소 크기
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.primary.walnut,
+    backgroundColor: colors.primary.terracotta,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 12,

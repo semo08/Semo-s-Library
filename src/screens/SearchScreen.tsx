@@ -127,7 +127,7 @@ export default function SearchScreen() {
     if (isSearching) {
       return (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary.walnut} />
+          <ActivityIndicator size="large" color={colors.primary.terracotta} />
           <Text style={styles.loadingText}>검색 중...</Text>
         </View>
       );
@@ -155,7 +155,7 @@ export default function SearchScreen() {
           <TextInput
             style={styles.searchInput}
             placeholder="책 제목, 저자, ISBN으로 검색"
-            placeholderTextColor={colors.neutral.sand}
+            placeholderTextColor={colors.text.latte}
             value={query}
             onChangeText={setQuery}
             returnKeyType="search"
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: colors.neutral.sand,
+    borderColor: colors.text.latte,
   },
   searchIcon: {
     fontSize: 16,
@@ -219,12 +219,12 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     ...typography.body,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     padding: 0,
   },
   clearButton: {
     fontSize: 16,
-    color: colors.neutral.sand,
+    color: colors.text.latte,
     paddingLeft: 8,
   },
   emptyListContent: {
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     marginTop: 16,
   },
   resultHeader: {
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   },
   resultCount: {
     ...typography.caption,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
   },
   emptyState: {
     alignItems: 'center',
@@ -260,12 +260,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     ...typography.subtitle,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     marginBottom: 12,
   },
   emptyDescription: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     textAlign: 'center',
     lineHeight: 22,
   },

@@ -62,7 +62,7 @@
 
 ```bash
 # 저장소 클론
-git clone https://github.com/{username}/semos-library.git
+git clone https://github.com/semo08/semos-library.git
 cd semos-library
 
 # 패키지 설치

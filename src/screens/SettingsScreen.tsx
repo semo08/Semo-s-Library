@@ -24,10 +24,10 @@ export default function SettingsScreen() {
             value={isDarkMode}
             onValueChange={setIsDarkMode}
             trackColor={{
-              false: colors.neutral.sand,
+              false: colors.text.latte,
               true: colors.primary.maple,
             }}
-            thumbColor={isDarkMode ? colors.primary.walnut : colors.white}
+            thumbColor={isDarkMode ? colors.primary.terracotta : colors.white}
           />
         </View>
       </View>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.label,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -107,17 +107,17 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     ...typography.bodyLarge,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     fontWeight: '500',
   },
   settingDescription: {
     ...typography.bodySmall,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     marginTop: 2,
   },
   arrow: {
     fontSize: 24,
-    color: colors.neutral.sand,
+    color: colors.text.latte,
   },
   footer: {
     flex: 1,
@@ -127,11 +127,11 @@ const styles = StyleSheet.create({
   },
   footerText: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
   },
   footerSubtext: {
     ...typography.caption,
-    color: colors.neutral.sand,
+    color: colors.text.latte,
     marginTop: 4,
   },
 });

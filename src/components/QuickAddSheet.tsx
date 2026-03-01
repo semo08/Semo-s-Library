@@ -122,20 +122,20 @@ const styles = StyleSheet.create({
   handle: {
     width: 40,
     height: 4,
-    backgroundColor: colors.neutral.sand,
+    backgroundColor: colors.text.latte,
     borderRadius: 2,
     marginBottom: 20,
   },
   title: {
     ...typography.subtitle,
     fontSize: 18,
-    color: colors.neutral.charcoal,
+    color: colors.text.espresso,
     textAlign: 'center',
     marginBottom: 8,
   },
   author: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     textAlign: 'center',
   },
   buttons: {
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     minHeight: 120, // 터치 타겟 충분한 높이
   },
   readButton: {
-    backgroundColor: colors.primary.walnut,
+    backgroundColor: colors.primary.terracotta,
   },
   wishlistButton: {
     backgroundColor: colors.accent.forest,
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.neutral.sand,
+    borderColor: colors.text.latte,
     minHeight: 52, // 터치 타겟
   },
   cancelButtonText: {
     ...typography.body,
-    color: colors.neutral.coffee,
+    color: colors.text.coffee,
     fontWeight: '600',
   },
 });
