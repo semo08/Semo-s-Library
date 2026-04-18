@@ -7,10 +7,12 @@ import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { TabNavigator } from './src/navigation';
 import { initDatabase } from './src/services';
 import { colors } from './src/constants';
+import { useThemeStore } from './src/stores/themeStore';
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isDarkMode } = useThemeStore();
 
   useEffect(() => {
     const init = async () => {
@@ -47,7 +49,7 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <TabNavigator />
-        <StatusBar style="dark" />
+        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
       </NavigationContainer>
     </SafeAreaProvider>
   );

@@ -1,31 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 import { colors, typography } from '../constants';
+import { useThemeStore } from '../stores/themeStore';
 
 export default function SettingsScreen() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleDarkMode } = useThemeStore();
 
   return (
-    <View style={styles.container}>
-      {/* 테마 설정 */}
+    <View style={[styles.container, isDarkMode && styles.containerDark]}>
+      {/* 화면 설정 */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>화면</Text>
-        <View style={styles.settingItem}>
+        <Text style={[styles.sectionTitle, isDarkMode && styles.textMutedDark]}>
+          화면
+        </Text>
+        <View style={[styles.settingItem, isDarkMode && styles.settingItemDark]}>
           <View style={styles.settingInfo}>
-            <Text style={styles.settingIcon}>🌙</Text>
             <View>
-              <Text style={styles.settingLabel}>다크 모드</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, isDarkMode && styles.textDark]}>
+                다크 모드
+              </Text>
+              <Text style={[styles.settingDescription, isDarkMode && styles.textMutedDark]}>
                 어두운 테마를 사용합니다
               </Text>
             </View>
           </View>
           <Switch
             value={isDarkMode}
-            onValueChange={setIsDarkMode}
+            onValueChange={toggleDarkMode}
             trackColor={{
               false: colors.text.latte,
-              true: colors.primary.maple,
+              true: colors.primary.clay,
             }}
             thumbColor={isDarkMode ? colors.primary.terracotta : colors.white}
           />
@@ -34,13 +38,16 @@ export default function SettingsScreen() {
 
       {/* 계정 설정 */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>계정</Text>
-        <TouchableOpacity style={styles.settingItem}>
+        <Text style={[styles.sectionTitle, isDarkMode && styles.textMutedDark]}>
+          계정
+        </Text>
+        <TouchableOpacity style={[styles.settingItem, isDarkMode && styles.settingItemDark]}>
           <View style={styles.settingInfo}>
-            <Text style={styles.settingIcon}>☁️</Text>
             <View>
-              <Text style={styles.settingLabel}>클라우드 동기화</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, isDarkMode && styles.textDark]}>
+                클라우드 동기화
+              </Text>
+              <Text style={[styles.settingDescription, isDarkMode && styles.textMutedDark]}>
                 준비 중인 기능입니다
               </Text>
             </View>
@@ -51,13 +58,18 @@ export default function SettingsScreen() {
 
       {/* 앱 정보 */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>정보</Text>
-        <View style={styles.settingItem}>
+        <Text style={[styles.sectionTitle, isDarkMode && styles.textMutedDark]}>
+          정보
+        </Text>
+        <View style={[styles.settingItem, isDarkMode && styles.settingItemDark]}>
           <View style={styles.settingInfo}>
-            <Text style={styles.settingIcon}>📱</Text>
             <View>
-              <Text style={styles.settingLabel}>앱 버전</Text>
-              <Text style={styles.settingDescription}>1.0.0</Text>
+              <Text style={[styles.settingLabel, isDarkMode && styles.textDark]}>
+                앱 버전
+              </Text>
+              <Text style={[styles.settingDescription, isDarkMode && styles.textMutedDark]}>
+                1.0.0
+              </Text>
             </View>
           </View>
         </View>
@@ -65,8 +77,9 @@ export default function SettingsScreen() {
 
       {/* 푸터 */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Semo's Library</Text>
-        <Text style={styles.footerSubtext}>Made with 📚</Text>
+        <Text style={[styles.footerText, isDarkMode && styles.textMutedDark]}>
+          Semo's Library
+        </Text>
       </View>
     </View>
   );
@@ -75,6 +88,9 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background.cream,
+  },
+  containerDark: {
     backgroundColor: colors.background.cream,
   },
   section: {
@@ -97,13 +113,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 8,
   },
+  settingItemDark: {
+    backgroundColor: colors.background.linen,
+  },
   settingInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-  },
-  settingIcon: {
-    fontSize: 24,
   },
   settingLabel: {
     ...typography.bodyLarge,
@@ -119,6 +135,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.text.latte,
   },
+  textDark: {
+    color: colors.text.espresso,
+  },
+  textMutedDark: {
+    color: colors.text.latte,
+  },
   footer: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -128,10 +150,5 @@ const styles = StyleSheet.create({
   footerText: {
     ...typography.body,
     color: colors.text.coffee,
-  },
-  footerSubtext: {
-    ...typography.caption,
-    color: colors.text.latte,
-    marginTop: 4,
   },
 });
